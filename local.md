@@ -136,21 +136,28 @@ Conda downloads all packages required for the exercises in a controlled, reprodu
 > `conda env update -f env.yml --prune`.
 
 ## 4. Data
-The data for this course can be found at this [link](https://surfdrive.surf.nl/files/index.php/s/uStySKYBKHBXcjP), using the password `Ae4353`.
+The data comes from two places: most of it from SURFdrive, and Exercise 3's faces from Kaggle. Everything ends up in the same folder.
 
-Download it, then extract or unzip it and place the resulting `AE4353-Datasets-2026` folder inside the repository's `data/` directory at `/your/workspace/path/AE4353-Y26/data/`. You should end up with something like:
+**1. The SURFdrive download (Exercises 1 and 2).** The data can be found at this [link](https://surfdrive.surf.nl/files/index.php/s/uStySKYBKHBXcjP), using the password `Ae4353`. Download it, then extract or unzip it and place the resulting `AE4353-Datasets-2026` folder inside the repository's `data/` directory at `/your/workspace/path/AE4353-Y26/data/`.
+
+**2. The Kaggle dataset (Exercise 3).** Open [`ae4353_3`](https://www.kaggle.com/datasets/quentinmissinne/ae4353-3) and press `Download` — it is public, so you only need a free Kaggle account. Unzip it and move `FFHQ_FACES.npz` into the same `AE4353-Datasets-2026` folder. The download also contains an `additional/` folder; you can ignore it, since those helper scripts already come with this repository.
+
+You should end up with something like:
 
 ```
 AE4353-Y26/
 └── data/
     └── AE4353-Datasets-2026/
-        ├── 2D_QUAD_HOVER.npz          # Exercise 1
-        ├── 3D_QUAD_HOVER.npz          # Exercise 1
+        ├── 2D_QUAD_HOVER.npz          # Exercise 1   (SURFdrive)
+        ├── 3D_QUAD_HOVER.npz          # Exercise 1   (SURFdrive)
+        ├── FFHQ_FACES.npz             # Exercise 3   (Kaggle)
         └── polarization_dataset/
-            └── dataset.h5             # Exercise 2
+            └── dataset.h5             # Exercise 2   (SURFdrive)
 ```
 
-Exercise 3 uses MNIST, which is downloaded automatically by `torchvision` the first time you run the notebook — nothing to place by hand.
+Exercise 0 needs nothing — it generates its own data.
+
+> 💡 You only need the data for the exercise you are working on, so feel free to fetch these as you go rather than all at once.
 
 > ⚠️ Please do not commit the dataset — the repository ships only an empty `data/` folder.
 
