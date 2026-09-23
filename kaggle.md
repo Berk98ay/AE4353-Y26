@@ -40,7 +40,7 @@ data/*.npz              /-->  a Dataset, attached as an input
 
 2. **Phone-verify your account.** Go to `Settings` → `Phone Verification` and complete it.
 
-    > ⚠️ Without phone verification Kaggle will **not** give you GPU access or internet access inside notebooks. Exercise 3 needs internet to download MNIST, so do this before you start.
+    > ⚠️ Without phone verification Kaggle will **not** give you GPU access or internet access inside notebooks. Exercises 2 and 3 train on images and want a GPU, so do this before you start.
 
 ## 2. Get the Files
 Even when working on Kaggle you need a local copy of the repository to upload from. Either:
@@ -63,7 +63,7 @@ You repeat this once per exercise. The per-exercise file lists are in [section 4
 ### Create the Dataset
 1. Press `+ Create` again and choose **`New Dataset`**.
 
-2. Give it exactly the name listed for your exercise (`AE4353_0`, `AE4353_2` or `AE4353_3` — Exercise 1's dataset is public, see [Exercise 1](#exercise-1--quadrotor-flight)). The notebooks refer to these names, so a typo means broken paths.
+2. Give it exactly the name listed for your exercise (`AE4353_0` or `AE4353_2` — the Exercise 1 and 3 datasets are public, so there is nothing to create for those; see [Exercise 1](#exercise-1--quadrotor-flight) and [Exercise 3](#exercise-3--variational-autoencoders)). The notebooks refer to these names, so a typo means broken paths.
 
 3. Upload the files listed for that exercise.
 
@@ -105,7 +105,7 @@ Summary of what goes where:
 | 0 | `ex_0/ex_0_kaggle.ipynb` | `AE4353_0` | `/kaggle/input/ae4353-0/` | not needed |
 | 1 | `ex_1/ex_1_kaggle.ipynb` | `ae4353_1` (public, by Quentin Missinne — no upload) | `/kaggle/input/ae4353-1/` | not needed |
 | 2 | `ex_2/ex_2 kaggle.ipynb` | `AE4353_2` | `/kaggle/input/ae4353-2/` | not needed |
-| 3 | `ex_3/ex_3_kaggle.ipynb` | `AE4353_3` | `/kaggle/input/ae4353-3/` | **required** (MNIST download) |
+| 3 | `ex_3/ex_3_kaggle.ipynb` | `ae4353_3` (public, by Quentin Missinne — no upload) | `/kaggle/input/ae4353-3/` | not needed |
 
 ### Exercise 0 — Python and ML Warm-Up
 **Dataset `AE4353_0`** — the `additional` folder from `ex_0/` only, containing:
@@ -159,25 +159,30 @@ Everything else in the notebook derives from `DATASET_PATH`, including the cell 
 - This exercise trains a CNN on images — [enable the GPU](#enable-the-gpu).
 
 ### Exercise 3 — Variational Autoencoders
-**Dataset `AE4353_3`**:
+> ✅ **Nothing to download, nothing to upload.** This dataset is already published on Kaggle. Skip [Create the Dataset](#create-the-dataset) entirely and just attach it.
 
-1. The `additional` folder from `ex_3/`, containing `plots.py`.
+1. In your notebook, press **`+ Add Input`** in the `Input` section on the right.
+2. Select the **`Datasets`** tab **first** — otherwise you are searching notebooks or models and will not find it.
+3. Search for `ae4353_3`.
+4. Add the dataset uploaded by **Quentin Missinne**.
 
-That is all — there is no SURFdrive data for this exercise. MNIST is downloaded by `torchvision` at runtime, which is why **`Internet` must be enabled** in the session options.
+It contains the face data (`FFHQ_FACES.npz`) and the `additional` folder of helper scripts, so that is everything the notebook needs.
 
-**In the notebook**:
+**Then set the path.** Hover over the dataset folder in the `Input` panel, click the **copy-path** icon, and paste the result into the one variable at the top of the configuration cell:
 
-- Copy the helper folder:
-    ```python
-    shutil.copytree('/kaggle/input/ae4353-3/additional', '/kaggle/working/additional', dirs_exist_ok=True)
-    ```
-- Point the MNIST download at a **writable** location. `/kaggle/input/` is read-only, and the default `'~/datasets'` will not survive the session:
-    ```python
-    dataset_path = '/kaggle/working/datasets'
-    ```
+```python
+DATASET_PATH = "/kaggle/input/ae4353-3"   # <- paste your copied path here
+
+dataset_file = f"{DATASET_PATH}/FFHQ_FACES.npz"
+```
+
+Everything else in the notebook derives from `DATASET_PATH`, including the cell that copies the helper scripts into `/kaggle/working/`, so this is the only path you set.
+
+- This exercise trains a network on images — [enable the GPU](#enable-the-gpu).
+- **No internet access is needed.** The data comes from the attached dataset, so you can leave `Internet` switched off.
 
 ## 5. Sessions, Quotas and Saving Your Work
-- **Sessions are temporary.** A session shuts down after ~20 minutes of inactivity, and there is a hard runtime limit (currently 12 hours CPU / 9 hours GPU per session). Everything written to `/kaggle/working/` is lost when the session ends unless you save.
+- **Sessions are temporary.** A session shuts down after ~20 minutes of inactivity, and there is a hard runtime limit (currently 12 hours per session, on both CPU and GPU). Everything written to `/kaggle/working/` is lost when the session ends unless you save.
 - **GPU quota is weekly** (around 30 hours) and resets every week. Prototype on CPU with a small number of epochs, then switch to GPU for the real training run.
 - **Save your notebook** with `Save Version` (top right):
     - *Quick Save* stores the notebook as it is on screen, without re-running it.
@@ -197,7 +202,7 @@ That is all — there is no SURFdrive data for this exercise. MNIST is downloade
 | `ModuleNotFoundError: No module named 'dataset'` (Ex 2) | `dataset.py` was not copied into `/kaggle/working/`. See [Exercise 2](#exercise-2--solar-compass). |
 | `NameError: name 'dataset_path' is not defined` (Ex 2) | Define it as shown in [Exercise 2](#exercise-2--solar-compass). |
 | `OSError: [Errno 30] Read-only file system` | You are writing into `/kaggle/input/`. Write to `/kaggle/working/` instead. |
-| MNIST download hangs or fails (Ex 3) | `Internet` is off, or your account is not phone-verified. See [section 1](#1-create-and-verify-your-account). |
+| `FileNotFoundError` on `FFHQ_FACES.npz` (Ex 3) | The `ae4353_3` dataset is not attached, or `DATASET_PATH` does not match it. Copy the real path from the Input panel. See [Exercise 3](#exercise-3--variational-autoencoders). |
 | `torch.cuda.is_available()` is `False` | No accelerator selected for the session, or the notebook's device flag is still set to CPU. See [Enable the GPU](#enable-the-gpu). |
 | Session died mid-training | Idle timeout or quota. Reduce epochs, save checkpoints to `/kaggle/working/`, and keep the browser tab active while training. |
 
